@@ -48,7 +48,7 @@ export const genCloudFlareApi = (apiToken) => {
 };
 
 export const getIp4 = async () => await (await fetch("https://checkip.amazonaws.com")).text();
-export const getIp6 = async () => new Promise((resolve, reject) => exec("ifconfig -a eno1 | grep inet6 | awk '{ print $2 }' | sed -n '/^fe80/!p'", (err, stdout, stderr) => err ? reject(err) : resolve(stdout.trim()));
+export const getIp6 = async () => new Promise((resolve, reject) => exec("ifconfig -a eno1 | grep inet6 | awk '{ print $2 }' | sed -n '/^fe80/!p'", (err, stdout, stderr) => err ? reject(err) : resolve(stdout.trim())));
 export const getIp = async () => ({ ip4: await getIp4(), ip6: await getIp6() });
 
 export const updateCloudFlareDnsRecord = async (name, apiToken, { ip4, ip6 }) => {
