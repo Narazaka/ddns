@@ -47,19 +47,23 @@ export const genCloudFlareApi = (apiToken) => {
   };
 };
 
-export const getIp4 = async () => await (await fetch("https://checkip.amazonaws.com")).text();
+export const getIp4 = async () => (await (await fetch("https://checkip.amazonaws.com")).text()).trim();
 export const getIp6 = async () => new Promise((resolve, reject) => exec("ifconfig -a eno1 | grep inet6 | awk '{ print $2 }' | sed -n '/^fe80/!p'", (err, stdout, stderr) => err ? reject(err) : resolve(stdout.trim())));
 export const getIp = async () => ({ ip4: await getIp4(), ip6: await getIp6() });
 
 export const updateCloudFlareDnsRecord = async (name, apiToken, { ip4, ip6 }) => {
   const api = genCloudFlareApi(apiToken);
-  if (ip4) await api.updateDnsRecord({ name, type: "A", content: ip4 });
-  if (ip6) await api.updateDnsRecord({ name, type: "AAAA", content: ip6 });
+  const result = {};
+  if (ip4) result.ip4 = await api.updateDnsRecord({ name, type: "A", content: ip4 });
+  if (ip6) result.ip6 = await api.updateDnsRecord({ name, type: "AAAA", content: ip6 });
+  return result;
 };
 
-export const updateCloudFlareDnsRecords = async (items) => {
+export const updateCloudFlareDnsRecords = async (items, debug) => {
   const ip = await getIp();
+  if (debug) console.log(ip);
   for (const { name, apiToken } of items) {
-    await updateCloudFlareDnsRecord(name, apiToken, ip);
+    const result = await updateCloudFlareDnsRecord(name, apiToken, ip);
+    if (debug) console.log(result);
   }
 };
