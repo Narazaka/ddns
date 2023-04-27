@@ -55,8 +55,8 @@ export const getIp = async () => ({ ip4: await getIp4(), ip6: await getIp6() });
 export const updateCloudFlareDnsRecord = async (apiToken, options, { ip4, ip6 }) => {
   const api = genCloudFlareApi(apiToken);
   const result = {};
-  if (ip4) result.ip4 = await api.updateDnsRecord({ ...options, type: "A", content: ip4 });
-  if (ip6) result.ip6 = await api.updateDnsRecord({ ...options, type: "AAAA", content: ip6 });
+  if (ip4 && options.ip4 !== false) result.ip4 = await api.updateDnsRecord({ ...options, type: "A", content: ip4 });
+  if (ip6 && options.ip6 !== false) result.ip6 = await api.updateDnsRecord({ ...options, type: "AAAA", content: ip6 });
   return result;
 };
 
@@ -65,6 +65,6 @@ export const updateCloudFlareDnsRecords = async (items, debug) => {
   if (debug) console.log(ip);
   for (const item of items) {
     const result = await updateCloudFlareDnsRecord(item.apiToken, item, ip);
-    if (debug) console.log(result);
+    if (debug) console.log(item, result);
   }
 };
