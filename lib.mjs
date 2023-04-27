@@ -40,12 +40,12 @@ export const genCloudFlareApi = (apiToken) => {
      * 
      * @param {string} zoneId 
      * @param {{name: string; type: string}} options
-     * @returns {Promise<string>}
+     * @returns {Promise<string | undefined>}
      */
     async getDnsRecordId(zoneId, { name, type }) {
       const res = await fetch(`${cloudFlareApiRoot}/zones/${zoneId}/dns_records?name=${name}&type=${type}`, { headers });
       const { result } = await res.json();
-      return result.find(item => item.name === name && item.type === type).id;
+      return result.find(item => item.name === name && item.type === type)?.id;
     },
     /**
      * 
