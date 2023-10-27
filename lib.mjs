@@ -99,7 +99,7 @@ export const getIp4 = async () => (await (await fetch("https://checkip.amazonaws
  * 
  * @returns {Promise<string>}
  */
-export const getIp6 = async () => new Promise((resolve, reject) => exec("ip addr show enp1s0 | grep inet6 | awk '{ print $2 }' | sed -n '/^fe80/!p' | sed 's/\/64$//'", (err, stdout, stderr) => err ? reject(err) : resolve(stdout.trim())));
+export const getIp6 = async () => new Promise((resolve, reject) => exec("ip addr show enp1s0 | grep inet6 | awk '{ print $2 }' | sed -n '/^fe80/!p' | sed 's/\\/64$//'", (err, stdout, stderr) => err ? reject(err) : resolve(stdout.trim())));
 export const getIp = async () => ({ ip4: await getIp4(), ip6: await getIp6() });
 
 /**
